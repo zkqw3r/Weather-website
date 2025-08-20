@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="shortcut icon" href="../static/icons/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../static/css/index.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="logo">POGODKIN</h1>
+        <div class="current_weather">
+            <form class="form" method="POST">
+                <div class="form-content">
+                    <label class="label_form" for="city_input">Город </label>
+                    <input class="city_input" type="text" id="city_input" name="city_name" placeholder="например: Самара" autocomplete="off">
+                    <button class="search_button" type="submit">
+                        <img class="search_button_img" src="/static/icons/search.png" alt="">
+                    </button>
+                </div>
+            </form>
+            <div class="current_weather_data">
+                {% if error %}
+                    <p class="current_weather_info_title">{{ error }}</p>
+                {% else %}
+                    {% if cod==200 %}
+                        <div class="current_weather_info_title">
+                            <p class="current_weather_info_title_city">
+                                {{ name|lower|capitalize }}
+                            </p>
+                        </div>
+                        <div class="current_weather_info_title" style="font-size: 32px; font-weight: 500;">Текущая погода<br></div>
+                        <div class="current_weather_info">
+                            <img class="weather_icon_owm" src={{ url_for('static', filename=owm_icon_path) }} alt="">
+                            <p class="current_weather_info_title">{{ weather.0.description|capitalize }}</p>
+                        </div>
+                        <div class="current_weather_info">
+                            <img class="weather_icon" src='/static/icons/heat.png' alt="">
+                            <p class="current_weather_info_title">Температура: {{ main.temp|round|int }} °C</p>
+                        </div>
+                        <div class="current_weather_info">
+                            <img class="weather_icon" src='/static/icons/mild.png' alt="">
+                            <p class="current_weather_info_title">Ощущается как: {{ main.feels_like|round|int }} °C</p>
+                        </div>
+                        <div class="current_weather_info">
+                            <img class="weather_icon" src='/static/icons/pressure.png' alt="">
+                            <p class="current_weather_info_title">Давление: {{ pressure }} мм.рт.ст.</p>
+                        </div>
+                        <div class="current_weather_info">
+                            <img class="weather_icon" src='/static/icons/wind.png' alt="">
+                            <p class="current_weather_info_title">Ветер: {{ wind.speed }} м/с ({{ direction }})</p>
+                        </div>
+                    {% else %}
+                        <p class="current_weather_info_title">Введите город для получения данных!</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
