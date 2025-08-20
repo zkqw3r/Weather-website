@@ -51,6 +51,10 @@ cd Weather-website
 ```bash
 python -m venv venv
 ```
+#### or
+```bash
+python3 -m venv venv
+```
 ### 3. Setting up a virtual environment
 ```bash
 source venv/bin/activate  # Linux/Mac
@@ -80,3 +84,4 @@ python flask_app.py
 - [ ] Display weather for several days ahead
 
 - [ ] Another language
+
