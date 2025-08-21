@@ -82,6 +82,7 @@ body {
 }
 
 .city_input {
+    background: rgba(255, 255, 255, 0.5);
     flex: 1;
     border-radius: 52px;
     padding: 12px 20px;
@@ -215,4 +216,5 @@ body {
     .city_input {
         font-size: 14px;
     }
+
 }
