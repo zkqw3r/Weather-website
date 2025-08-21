@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="shortcut icon" href="../static/icons/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../static/css/weather.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="logo">
+            <a href="/" class="logo_link">POGODKIN</a>
+        </h1>
+        <div class="current_weather">
+            <form class="form" method="POST">
+                <div class="form-content">
+                    <label class="label_form" for="city_input">Город </label>
+                    <input class="city_input" type="text" id="city_input" name="city_name" placeholder="например: Самара" autocomplete="off">
+                    <button class="search_button" type="submit">
+                        <img class="search_button_img" src="/static/icons/search.png" alt="search_button">
+                    </button>
+                </div>
+            </form>
+            <div class="current_weather_data">
+                {% if error %}
+                    <p class="current_weather_info_title">{{ error }}</p>
+                {% else %}
+                    <div class="current_weather_info_title">
+                        <p class="current_weather_info_title_city">
+                            {{ data.name }}
+                        </p>
+                    </div>
+                    <div class="current_weather_info_title" style="font-size: 32px; font-weight: 500;">Текущая погода<br></div>
+                    <div class="current_weather_info">
+                        <img class="weather_icon_owm" src={{ url_for('static', filename=data.icon) }} alt="weather_icon">
+                        <p class="current_weather_info_title">{{ data.weather|capitalize }}</p>
+                    </div>
+                    <div class="current_weather_info">
+                        <img class="weather_icon" src='/static/icons/heat.png' alt="temp_icon">
+                        <p class="current_weather_info_title">Температура: {{ data.temp|round|int }} °C</p>
+                    </div>
+                    <div class="current_weather_info">
+                        <img class="weather_icon" src='/static/icons/mild.png' alt="temp_icon">
+                        <p class="current_weather_info_title">Ощущается как: {{ data.feels_like_temp|round|int }} °C</p>
+                    </div>
+                    <div class="current_weather_info">
+                        <img class="weather_icon" src='/static/icons/pressure.png' alt="pressure_icon">
+                        <p class="current_weather_info_title">Давление: {{ data.pressure }} мм.рт.ст.</p>
+                    </div>
+                    <div class="current_weather_info">
+                        <img class="weather_icon" src='/static/icons/wind.png' alt="wind_icon">
+                        <p class="current_weather_info_title">Ветер: {{ data.wind_speed }} м/с ({{ data.wind_direction }})</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+</body>
+</html>
