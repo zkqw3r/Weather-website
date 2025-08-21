@@ -19,9 +19,10 @@ async def search(city_name):
 
 
 @app.errorhandler(404)
-def error404(error):
+async def error404(error):
     return render_template('error.html')
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
