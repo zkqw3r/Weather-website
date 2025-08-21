@@ -58,7 +58,7 @@ body {
     box-shadow: 0px 35px 50px -10px rgba(163, 163, 163, 0.25);
     backdrop-filter: blur(3px);
     font-weight: 500;
-    font-size: 52px;
+    font-size: 36px;
     border-radius: 52px;
     padding: 35px;
     text-align: center;
@@ -68,7 +68,7 @@ body {
 
 @media (max-width: 768px) {
     .error_info {
-        font-size: 36px;
+        font-size: 30px;
     }
 }
 
@@ -82,4 +82,5 @@ body {
     .error_info {
         font-size: 18px;
     }
+
 }
