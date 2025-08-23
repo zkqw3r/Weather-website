@@ -7,6 +7,7 @@
 
 <div align="center">
   <img src="static\images\example1.png" width="1000" alt="Pogodkin Preview">
+  <br></br>
   <img src="static\images\example2.png" width="1000" alt="Pogodkin Preview">
   
   *minimalistic weather service*
@@ -85,5 +86,6 @@ python flask_app.py
 - [ ] Display weather for several days ahead
 
 - [ ] Another language
+
 
 
