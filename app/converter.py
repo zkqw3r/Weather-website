@@ -1,4 +1,8 @@
+from datetime import datetime
+
+
 async def wind_direction(degrees):
+    
     """
     Function for getting information about wind direction (initially, 
     the API transmits wind direction degrees)
@@ -15,6 +19,7 @@ async def pressure_mmhg(hPa):
 
 
 async def pick_icon(icon_id):
+    
     """
     Function for selecting an image from the project folder, 
     due to the delay in loading the photo via the link via 
@@ -22,6 +27,7 @@ async def pick_icon(icon_id):
     it was decided to download all the icons and compare them 
     with the id that is passed to weather as the id parameter
     """
+    
     group = {
         200:'icons/11d.png',
         201:'icons/11d.png',
@@ -80,3 +86,28 @@ async def pick_icon(icon_id):
         804:'icons/04d.png',
     }
     return group.get(icon_id)
+
+
+async def format_date(date_str):
+    try:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+        day = date_obj.day
+        month = date_obj.strftime("%B").lower()
+        weekday = date_obj.strftime("%A").lower()
+        
+        months_ru = {
+            'january': 'января', 'february': 'февраля', 'march': 'марта',
+            'april': 'апреля', 'may': 'мая', 'june': 'июня',
+            'july': 'июля', 'august': 'августа', 'september': 'сентября',
+            'october': 'октября', 'november': 'ноября', 'december': 'декабря'
+        }
+        
+        weekdays_ru = {
+            'monday': 'пн', 'tuesday': 'вт', 'wednesday': 'ср',
+            'thursday': 'чт', 'friday': 'пт', 'saturday': 'сб',
+            'sunday': 'вс'
+        }
+
+        return f"{weekdays_ru.get(weekday, weekday)} {day} {months_ru.get(month, month)}"
+    except Exception as e:
+        return date_str
