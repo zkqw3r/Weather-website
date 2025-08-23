@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather</title>
-    <link rel="shortcut icon" href="../static/icons/favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../static/css/weather.css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/weather.css') }}">
 </head>
 <body>
     <div class="container">
@@ -22,40 +22,178 @@
                     </button>
                 </div>
             </form>
-            <div class="current_weather_data">
-                {% if error %}
-                    <p class="current_weather_info_title">{{ error }}</p>
-                {% else %}
+            {% if error %}
+                <p class="error_title">{{ error }}</p>
+            {% else %}
+                <div class="current_weather_data">
                     <div class="current_weather_info_title">
                         <p class="current_weather_info_title_city">
-                            {{ data.name }}
+                            {{ cw_data.name }}
                         </p>
                     </div>
-                    <div class="current_weather_info_title" style="font-size: 32px; font-weight: 500;">Текущая погода<br></div>
-                    <div class="current_weather_info">
-                        <img class="weather_icon_owm" src={{ url_for('static', filename=data.icon) }} alt="weather_icon">
-                        <p class="current_weather_info_title">{{ data.weather|capitalize }}</p>
+                    <div class="current_weather_info_title" >Текущая погода<br></div>
+                    <div class="current_weather_temp_and_icon">
+                        <img class="weather_icon_owm" src={{ url_for('static', filename=cw_data.icon) }} alt="weather_icon">
+                        <p class="current_weather_info_title">{{ cw_data.temp }}</p>
                     </div>
-                    <div class="current_weather_info">
-                        <img class="weather_icon" src='/static/icons/heat.png' alt="temp_icon">
-                        <p class="current_weather_info_title">Температура: {{ data.temp|round|int }} °C</p>
+                    <div class="weather_data">
+                            <p class="current_weather_info_title">{{ cw_data.weather|capitalize }}</p>
+                        <div class="current_weather_info">
+                            <img class="weather_icon" src='/static/icons/mild.png' alt="temp_icon">
+                            <p class="current_weather_info_desc">Ощущается как {{ cw_data.feels_like_temp }}</p>
+                        </div>
+                        <div class="current_weather_info">
+                            <img class="weather_icon" src='/static/icons/pressure.png' alt="pressure_icon">
+                            <p class="current_weather_info_desc">Давление {{ cw_data.pressure }} мм.рт.ст.</p>
+                        </div>
+                        <div class="current_weather_info">
+                            <img class="weather_icon" src='/static/icons/wind.png' alt="wind_icon">
+                            <p class="current_weather_info_desc">Ветер {{ cw_data.wind_speed }} м/с ({{ cw_data.wind_direction }})</p>
+                        </div>
                     </div>
-                    <div class="current_weather_info">
-                        <img class="weather_icon" src='/static/icons/mild.png' alt="temp_icon">
-                        <p class="current_weather_info_title">Ощущается как: {{ data.feels_like_temp|round|int }} °C</p>
-                    </div>
-                    <div class="current_weather_info">
-                        <img class="weather_icon" src='/static/icons/pressure.png' alt="pressure_icon">
-                        <p class="current_weather_info_title">Давление: {{ data.pressure }} мм.рт.ст.</p>
-                    </div>
-                    <div class="current_weather_info">
-                        <img class="weather_icon" src='/static/icons/wind.png' alt="wind_icon">
-                        <p class="current_weather_info_title">Ветер: {{ data.wind_speed }} м/с ({{ data.wind_direction }})</p>
-                    </div>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div>
+
+        <!-- Прогноз по дням с временными интервалами -->
+        {% if fdf_data %}
+        <div class="daily_forecast_section">
+            <h2 class="forecast_title">Прогноз на несколько дней</h2>
+            
+            {% for date, day_data in fdf_data.items() %}
+            <div class="day_section">
+                <h3 class="day_date">{{ date }}</h3>
+                
+                <div class="time_groups">
+                    <!-- Утро -->
+                    {% if not 'forecasts' in day_data.morning %}
+                    <div class="time_group_card morning">
+                        <div class="time_group_header">
+                            <span class="time_group_title">Утро</span>
+                        </div>
+                        <div class="time_group_content">
+                            <div class="icon_and_temp">
+                                <img class="weather_icon_owm_fdf" src="{{ url_for('static', filename=day_data.morning.icon) }}" alt="Weather icon">
+                                <div class="temperature">{{ day_data.morning.temp }}</div>
+                            </div>
+                            <div class="weather_desc">{{ day_data.morning.weather|capitalize }}</div>
+                            
+                            <div class="weather_details">
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/mild.png') }}" alt="Feels like" class="weather_icon">
+                                    <span>Ощущается как {{ day_data.morning.temp_feels_like }}</span>
+                                </div>
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/pressure.png') }}" alt="Pressure" class="weather_icon">
+                                    <span>Давление {{ day_data.morning.pressure }} мм</span>
+                                </div>
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/wind.png') }}" alt="Wind" class="weather_icon">
+                                    <span>Ветер {{ day_data.morning.wind_speed }} м/с ({{ day_data.morning.wind_direction }})</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- День -->
+                    {% if not 'forecasts' in day_data.day %}
+                    <div class="time_group_card morning">
+                        <div class="time_group_header">
+                            <span class="time_group_title">День</span>
+                        </div>
+                        <div class="time_group_content">
+                            <div class="icon_and_temp">
+                                <img class="weather_icon_owm_fdf" src="{{ url_for('static', filename=day_data.day.icon) }}" alt="Weather icon">
+                                <div class="temperature">{{ day_data.day.temp }}</div>
+                            </div>
+                            <div class="weather_desc">{{ day_data.day.weather|capitalize }}</div>
+                            
+                            <div class="weather_details">
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/mild.png') }}" alt="Feels like" class="weather_icon">
+                                    <span>Ощущается как {{ day_data.day.temp_feels_like }}</span>
+                                </div>
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/pressure.png') }}" alt="Pressure" class="weather_icon">
+                                    <span>Давление {{ day_data.day.pressure }} мм</span>
+                                </div>
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/wind.png') }}" alt="Wind" class="weather_icon">
+                                    <span>Ветер {{ day_data.day.wind_speed }} м/с ({{ day_data.day.wind_direction }})</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Вечер -->
+                    {% if not 'forecasts' in day_data.evening %}
+                    <div class="time_group_card morning">
+                        <div class="time_group_header">
+                            <span class="time_group_title">Вечер</span>
+                        </div>
+                        <div class="time_group_content">
+                            <div class="icon_and_temp">
+                                <img class="weather_icon_owm_fdf" src="{{ url_for('static', filename=day_data.evening.icon) }}" alt="Weather icon">
+                                <div class="temperature">{{ day_data.evening.temp }}</div>
+                            </div>
+                            <div class="weather_desc">{{ day_data.evening.weather|capitalize }}</div>
+                            
+                            <div class="weather_details">
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/mild.png') }}" alt="Feels like" class="weather_icon">
+                                    <span>Ощущается как {{ day_data.evening.temp_feels_like }}</span>
+                                </div>
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/pressure.png') }}" alt="Pressure" class="weather_icon">
+                                    <span>Давление {{ day_data.evening.pressure }} мм</span>
+                                </div>
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/wind.png') }}" alt="Wind" class="weather_icon">
+                                    <span>Ветер {{ day_data.evening.wind_speed }} м/с ({{ day_data.evening.wind_direction }})</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Ночь -->
+                    {% if not 'forecasts' in day_data.night %}
+                    <div class="time_group_card morning">
+                        <div class="time_group_header">
+                            <span class="time_group_title">Ночь</span>
+                        </div>
+                        <div class="time_group_content">
+                            <div class="icon_and_temp">
+                                <img class="weather_icon_owm_fdf" src="{{ url_for('static', filename=day_data.night.icon) }}" alt="Weather icon">
+                                <div class="temperature">{{ day_data.night.temp }}</div>
+                            </div>
+                            <div class="weather_desc">{{ day_data.night.weather|capitalize }}</div>
+                            
+                            <div class="weather_details">
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/mild.png') }}" alt="Feels like" class="weather_icon">
+                                    <span>Ощущается как {{ day_data.night.temp_feels_like }}</span>
+                                </div>
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/pressure.png') }}" alt="Pressure" class="weather_icon">
+                                    <span>Давление {{ day_data.night.pressure }} мм</span>
+                                </div>
+                                <div class="detail">
+                                    <img src="{{ url_for('static', filename='icons/wind.png') }}" alt="Wind" class="weather_icon">
+                                    <span>Ветер {{ day_data.night.wind_speed }} м/с ({{ day_data.night.wind_direction }})</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
-    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <script src="/static/js/search.js"></script>
 </body>
 </html>
