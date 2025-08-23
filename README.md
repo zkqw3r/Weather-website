@@ -6,7 +6,8 @@
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 <div align="center">
-  <img src="static\images\example.png" width="1000" alt="Pogodkin Preview">
+  <img src="static\images\example1.png" width="1000" alt="Pogodkin Preview">
+  <img src="static\images\example2.png" width="1000" alt="Pogodkin Preview">
   
   *minimalistic weather service*
 </div>
@@ -84,4 +85,5 @@ python flask_app.py
 - [ ] Display weather for several days ahead
 
 - [ ] Another language
+
 
