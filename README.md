@@ -83,9 +83,10 @@ python flask_app.py
 ---
 ### 📝 To-do list
 
-- [ ] Display weather for several days ahead
+- [X] Display weather for several days ahead
 
 - [ ] Another language
+
 
 
 
